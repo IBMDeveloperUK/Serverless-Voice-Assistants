@@ -69,7 +69,7 @@ const nouns = new Array(
 );
 
 function returnRandomElement(arr) {
-    var rand = arr[Math.floor(Math.random() * arr.length)];
+    let rand = arr[Math.floor(Math.random() * arr.length)];
     return rand;
 }
 
@@ -81,15 +81,13 @@ function toTitleCase(str) {
 
 function main() {
 
-    var statement = returnRandomElement(prefixes) +
+    let statement = returnRandomElement(prefixes) +
         " " + returnRandomElement(adverbs) +
         " " + returnRandomElement(verbs) +
         " " + returnRandomElement(adjectives) +
         " " + returnRandomElement(nouns);
 
-    var response = {
-        "text": statement
+    return {
+        "text": toTitleCase(statement)
     }
-
-    return response;
 }

@@ -1,35 +1,10 @@
-# Building your own action
-
-### Our use-case
-
-If you've ever worked for a medium-sized or large company then you will be familiar with receiving communications from *senior management*. Often it seems as though these communications contain as many of the latest buzzwords as possible. Phrases like *promoting synergy*, *core competency* and *thought leadership* spring up all over the place, mostly leaving the reader confused about the actual meaning of this vague waffle.
-
-Now let's assume you work for a small company or for one that can't afford to hire a strategy consultant and lots of executives. Your only option is to automate their jobs!
-
-During this lab we'll create a function that generates a random corporate strategy for us based on lots of buzzwords.
-
-### Creating the action
-
-#### Listing the random buzzwords
-
-To create a random corporate strategy each time we're going to break the statement in to five parts; a **prefix**, an **adverb**, a **verb**, an **adjective** and a **noun**. Strung together in this order we should be able to create a reasonable sounding meaningless statement of strategy.
-
-1. Create a new empty JavaScript and name it 'generator.js'.
-
-2. Add an array of prefixes to the top of the file:
-
-```javascript
 const prefixes = new Array(
     'We need to', 'It would be best if we could', 'We can obtain growth if we', 'Our strategy is to', 'The company is striving to',
     'We are on a journey to', 'We should', 'Our employees are working to', 'Our company has a clear strategy which is to',
     'Our organisation is striving to', 'We have committed to', 'We have a strong policy which is to', 'Our long-term goal is to',
     'In the short-term we will'
 );
-```
 
-3. Beneath this variable create a variable for our adverbs:
-
-```javascript
 const adverbs = new Array(
     'appropriately', 'assertively', 'authoritatively', 'collaboratively', 'compellingly', 'competently', 'completely',
     'continually', 'conveniently', 'credibly', 'distinctively', 'dramatically', 'dynamically', 'efficiently',
@@ -37,11 +12,7 @@ const adverbs = new Array(
     'objectively', 'phosfluorescently', 'proactively', 'professionally', 'progressively', 'quickly', 'rapidiously',
     'seamlessly', 'synergistically', 'uniquely', 'fungibly'
 );
-```
 
-4. Add another variable below that for our verbs:
-
-```javascript
 const verbs = new Array(
     'actualize', 'administrate', 'aggregate', 'architect', 'benchmark', 'brand', 'build', 'communicate', 'conceptualize',
     'coordinate', 'create', 'cultivate', 'customize', 'deliver', 'deploy', 'develop', 'disintermediate', 'disseminate',
@@ -55,11 +26,7 @@ const verbs = new Array(
     'scale', 'seize', 'simplify', 'strategize', 'streamline', 'supply', 'syndicate', 'synergize', 'synthesize', 'target',
     'transform', 'transition', 'underwhelm', 'unleash', 'utilize', 'visualize', 'whiteboard', 'cloudify', 'right-shore'
 );
-```
 
-5. After that add our list of adjectives:
-
-```javascript
 const adjectives = new Array(
     '24/7', '24/365', 'accurate', 'adaptive', 'alternative', 'an expanded array of', 'B2B', 'B2C', 'backend',
     'backward-compatible', 'best-of-breed', 'bleeding-edge', 'bricks-and-clicks', 'business', 'clicks-and-mortar',
@@ -84,11 +51,7 @@ const adjectives = new Array(
     'visionary', 'web-enabled', 'wireless', 'world-class', 'worldwide', 'fungible', 'cloud-ready', 'elastic', 'hyper-scale',
     'on-demand', 'cloud-based', 'cloud-centric', 'cloudified', 'agile'
 );
-```
 
-6. Finally add our array of nouns:
-
-```javascript
 const nouns = new Array(
     'action items', 'alignments', 'applications', 'architectures', 'bandwidth', 'benefits',
     'best practices', 'catalysts for change', 'channels', 'collaboration and idea-sharing', 'communities', 'content',
@@ -104,48 +67,18 @@ const nouns = new Array(
     'testing procedures', 'total linkage', 'users', 'value', 'vortals', 'web-readiness', 'web services', 'fungibility',
     'clouds', 'nosql', 'storage', 'virtualization', 'scrums', 'sprints', 'wins'
 );
-```
 
-We now have all the data we need to create our strategies in our javascript file.
-
-#### Picking from the array at random
-
-To build our sentence we need to pick one element from each of these arrays randomly and add them together.
-
-1. Add the following function to your JavaScript file:
-
-```javascript
 function returnRandomElement(arr) {
     let rand = arr[Math.floor(Math.random() * arr.length)];
     return rand;
 }
-```
 
-We can pass an array of any size in to this function and it will return a random element from the array. Perfect!
-
-#### Fixing the capitals
-
-Some of the arrays have capitalised words and some do not. Let's fix that with a quick function.
-
-1. Add this function to your file:
-
-```javascript
 function toTitleCase(str) {
     return str.replace(/\w\S*/g, function(txt) {
         return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
     });
 }
-```
 
-This function will capitalise the first letter of every word which should help keep our results consistent as well as add more drama to our corporate waffle!
-
-#### Putting it all together
-
-Finally we need to assemble our sentence. As we learned earlier, OpenWhisk looks for a `main()` function inside our file unless we explicitly specify a different entry point. We also need to return a JSON object to the platform.
-
-1. Add the following `main()` function to your file and save it:
-
-```javascript
 function main() {
 
     let statement = returnRandomElement(prefixes) +
@@ -155,32 +88,13 @@ function main() {
         " " + returnRandomElement(nouns);
 
     return {
-        "text": toTitleCase(statement)
-    };
+        "version": "1.0",
+        "response": {
+            "shouldEndSession": true,
+            "outputSpeech": {
+                "type": "PlainText",
+                "text": toTitleCase(statement)
+            }
+        }
+    }
 }
-```
-
-**Our action is ready. Lets upload it and invoke it to see it in action.**
-
-2. Upload your file to IBMCloud Functions:
-
-```
-$ ibmcloud wsk action create generateStrategy generator.js
-ok: created action generateStrategy
-```
-
-3. Test your action by invoking it from the CLI:
-
-```
-$ ibmcloud wsk action invoke -r generateStrategy
-{
-    "text": "We need to holisticly conceptualize client-focused value"
-}
-```
-
-Try invoking it a few times to see the different results you get.
-
-🎉🎉🎉 **Good job, your functionality is all ready to go. Now lets move on to integrating this with some voice assistants.** 🎉🎉🎉
-
-### Next Lab:
-[Creating an Amazon Alexa Skill](/labs/creating-an-alexa-skill.md)

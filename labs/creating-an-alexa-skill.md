@@ -60,9 +60,73 @@ When you start to build more complex Alexa skills, you need to define the *inten
 
 ![save and build model](img/save_and_build.png)
 
-#### Y
 
-🎉🎉🎉 **Good job, your functionality is all ready to go. Now lets move on to integrating this with some voice assistants.** 🎉🎉🎉
+### Updating your serverless action
+
+Your Alexa skill is almost ready to use but right now it won't work even if we integrate it with our serverless action. The Alexa skill interface expects a JSON payload to be returned in a certain format for it to work. To do that, we'll need to modify our existing `generateStrategy` action:
+
+1. Make a copy of your **generator.js** file and name it `alexa.js`
+
+```
+$ cp generator.js alexa.js
+```
+
+2. Open the new `alexa.js` file and modify the following `return` statement inside your `main()` function:
+
+**Previously**
+```javascript
+return {
+    "text": toTitleCase(statement)
+}
+```
+
+**Now**
+```javascript
+return {
+    "version": "1.0",
+    "response": {
+        "shouldEndSession": true,
+        "outputSpeech": {
+            "type": "PlainText",
+            "text": toTitleCase(statement)
+        }
+    }
+}
+```
+
+The functionality of our action hasn't changed but we're now returning our response in a format that will be accepted by Alexa. One important parameter is `shouldEndSession: true` which tells Alexa that we are finished conversing with the user.
+
+3. Save your `alexa.js` file.
+
+By default when you create actions on IBM Functions they are *private*. To allow our action to be called from the Alexa skill interface we need to make it *public*.
+
+4. Create a new action called `alexaGenerateStrategy` and enable it for the web:
+
+```
+$ ibmcloud wsk action create alexaGenerateStrategy alexa.js --web true
+ok: created action alexaGenerateStrategy
+```
+
+Using the `--web` flag with a value of `true` or `yes` allows an action to be accessible through a REST interface without the need for credentials. If you're interested in learning how to configure a web action with credentials see the [Securing web actions docs](https://cloud.ibm.com/docs/openwhisk?topic=cloud-functions-openwhisk_webactions#securing-web-actions). A web action can be invoked by using a URL that is structured as follows: `https://{APIHOST}/api/v1/web/{namespace}/{packageName}/{actionName}.{EXT}`.
+
+The package name is **default** if the action is not in a named package.
+
+5. Try calling your web endpoint with a tool such as [curl](https://curl.haxx.se/) or [postman](https://www.getpostman.com/):
+
+```
+$ curl https://eu-gb.functions.cloud.ibm.com/api/v1/web/edmundshee%40uk.ibm.com_dev/default/alexaGenerateStrategy.json
+{
+  "response": {
+    "outputSpeech": {
+      "text": "We Are On A Journey To Objectively Seize Effective Core Competencies",
+      "type": "PlainText"
+    },
+    "shouldEndSession": true
+  },
+  "version": "1.0"
+```
+
+🎉🎉🎉 **Awesome work, you now have a web-enabled action that can be called from anywhere. Why not move on to integrate your action and finalise your Alexa skill...** 🎉🎉🎉
 
 ### Next Lab:
-[Creating an Amazon Alexa Skill](/labs/creating-an-alexa-skill.md)
+[Integrating and testing your skill](/labs/integrating-your-skill.md)
