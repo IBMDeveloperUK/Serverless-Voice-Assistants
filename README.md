@@ -2,12 +2,9 @@
 
 Welcome to the Serverless Voice Assistant Workshop featuring [Apache Openwhisk](http://openwhisk.incubator.apache.org/) and [Amazon Alexa](https://developer.amazon.com/alexa).
 
-<!-- more content here -->
+In this workshop you will learn how to deploy serverless actions on IBM Cloud. You'll then develop an Amazon Alexa skill and integrate the two to create a fully-functioning voice assistant use-case.
 
-
-This workshop will teach you how to develop serverless applications, composed of loosely coupled microservice-like functions, using an open-source serverless platform.
-
-By the end of the workshop you should be set up with a development environment and learnt how to create and invoke actions, work with parameters and logs and optionally learnt how to use and publish packages.
+If you are new to serverless and haven't seen the presentation, we suggest reviewing the slides below before starting the workshop.
 
 ## Intro Slides
 
@@ -23,8 +20,10 @@ By the end of the workshop you should be set up with a development environment a
 
 ## Additional Content
 
-<!-- more content here -->
-
-*This is a shortened version of the [Openwhisk Bootcamp](https://github.com/IBM-Cloud/openwhisk-workshops/tree/master/bootcamp). If you finish early or would like to explore more in your own time try some of the exercises from there.*
+Here are some extra learning resources for you to continue your journey with Serverless and Voice Assistants:
+- [Serverless Bootcamp with OpenWhisk](https://github.com/IBM-Cloud/openwhisk-workshops/tree/master/bootcamp)
+- [Serverless developer patterns](https://developer.ibm.com/technologies/serverless/)
+- [Building custom Alexa Skills](https://medium.com/crowdbotics/how-to-build-a-custom-amazon-alexa-skill-step-by-step-my-favorite-chess-player-dcc0edae53fb)
+- [Serverless London Meetup](https://www.meetup.com/Serverless-London/)
 
 

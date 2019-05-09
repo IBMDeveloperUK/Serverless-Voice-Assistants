@@ -42,21 +42,33 @@ The skill **invocation name** is what a user will say to an Alexa device to trig
 
 When you start to build more complex Alexa skills, you need to define the *intents* that your user can utter. An *intent* is essentially a general action a user can perform e.g. "what is the forecast?" or "get my balance!". Since our skill doesn't handle multiple actions we'll just create one intent that will handle all requests.
 
-2. On the left side-bar click on `Intents` and click `+ Add`:
+2. On the left side-bar click on `Slot Types` and hit `+ Add`:
+
+![slot types](img/slot_types.png)
+
+3. Use the name `BAG_OF_WORDS` and hit the `Create custom slot type` button:
+
+![create slot type](img/create_slot_type.png)
+
+4. Now `BAG_OF_WORDS` needs a slot value. Just enter `Hello World` and hit the plus sign so that it has a slot value:
+
+![bag of words](img/bag_of_words.png)
+
+5. On the left side-bar click on `Intents` and click `+ Add`:
 
 ![intents](img/intents.png)
 
-3. Use the name `EveryThingIntent` and hit the `Create custom intent` button.
+6. Use the name `EveryThingIntent` and hit the `Create custom intent` button.
 
-4. Enter the text `{EveryThingSlot}` in to the text field under "Sample Utterances (0)" and click the plus sign to create the slot:
+7. Enter the text `{EveryThingSlot}` in to the text field under "Sample Utterances (0)" and click the plus sign to create the slot:
 
 ![sample utterance](img/sample_utterance.png)
 
-5. Scroll down to where it says `Intent Slots` and use the `Select a slot type` dropdown to select the value **BAG_OF_WORDS** for the EveryThingSlot:
+8. Scroll down to where it says `Intent Slots` and use the `Select a slot type` dropdown to select the value **BAG_OF_WORDS** for the EveryThingSlot:
 
 ![create intent](img/create_everything_intent.png)
 
-6. Click on `Save Model` and then `Build Model` in the top left corner of the console:
+9. Click on `Save Model` and then `Build Model` in the top left corner of the console:
 
 ![save and build model](img/save_and_build.png)
 
