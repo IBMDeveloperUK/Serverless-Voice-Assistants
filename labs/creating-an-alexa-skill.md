@@ -111,6 +111,14 @@ Using the `--web` flag with a value of `true` or `yes` allows an action to be ac
 
 The package name is **default** if the action is not in a named package.
 
+5. Get your action public url:
+
+```
+$ ibmcloud wsk action get alexaGenerateStrategy --url
+ok: got action alexaGenerateStrategy
+https://eu-gb.functions.cloud.ibm.com/api/v1/web/edmundshee%40uk.ibm.com_dev/default/alexaGenerateStrategy
+```
+
 5. Try calling your web endpoint with a tool such as [curl](https://curl.haxx.se/) or [postman](https://www.getpostman.com/):
 
 ```
@@ -125,6 +133,8 @@ $ curl https://eu-gb.functions.cloud.ibm.com/api/v1/web/edmundshee%40uk.ibm.com_
   },
   "version": "1.0"
 ```
+
+*Note: if you add `.json` to the end of your url the platform will return a JSON object*
 
 🎉🎉🎉 **Awesome work, you now have a web-enabled action that can be called from anywhere. Why not move on to integrate your action and finalise your Alexa skill...** 🎉🎉🎉
 
