@@ -50,4 +50,4 @@ You probably shouldn't publish this example, but you are now ready to create and
 🎉🎉🎉 **Congratulations. You've now successfully automated the jobs of the buzzword-loving executive and learned some great technology along the way.** 🎉🎉🎉
 
 ### Looking for more?
-[Return to the main menu for additional learning resources](README.md)
+[Return to the main menu for additional learning resources](/README.md)
