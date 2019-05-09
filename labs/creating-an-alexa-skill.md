@@ -3,181 +3,64 @@
 ### Background
 
 [Alexa](https://developer.amazon.com/alexa) is Amazon's cloud-based voice service. Most people are familiar with the service through using an [Amazon Echo or Echo dot](https://developer.amazon.com/alexa/echo) but the service can also be integrated in to custom internet-connected devices like this talking robotic fish:
+
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/bRxhgxH6FUI/0.jpg)](https://www.youtube.com/watch?v=bRxhgxH6FUI)
 
-### Creating the action
+When building a skill for Alexa there are two components - the **skill interface** and the **skill service**.
 
-#### Listing the random buzzwords
+The **skill interface** processes the speech that comes in from a device. It uses [natural language processing](https://en.wikipedia.org/wiki/Natural_language_processing) to determine the intent of the user and then passes this as a JSON object to the skill service. It also passes JSON responses back in to voice to the user or device.
 
-To create a random corporate strategy each time we're going to break the statement in to five parts; a **prefix**, an **adverb**, a **verb**, an **adjective** and a **noun**. Strung together in this order we should be able to create a reasonable sounding meaningless statement of strategy.
+The **skill service** is the part that actually executes the functionality of your skill. It accepts the JSON from the skill interface, does some stuff, then returns a JSON object back to the skill interface where it can be converted to speech. For our example we are using IBM Functions as our skill service and the Amazon dev platform as our skill interface.
 
-1. Create a new empty JavaScript and name it 'generator.js'.
+### Creating the skill
 
-2. Add an array of prefixes to the top of the file:
+#### Getting set up
 
-```javascript
-const prefixes = new Array(
-    'We need to', 'It would be best if we could', 'We can obtain growth if we', 'Our strategy is to', 'The company is striving to',
-    'We are on a journey to', 'We should', 'Our employees are working to', 'Our company has a clear strategy which is to',
-    'Our organisation is striving to', 'We have committed to', 'We have a strong policy which is to', 'Our long-term goal is to',
-    'In the short-term we will'
-);
-```
+Before we can create a new Alexa skill we need to create an Amazon developer account:
 
-3. Beneath this variable create a variable for our adverbs:
+1. Sign up for an Amazon Developer Account [here](https://developer.amazon.com/).
 
-```javascript
-const adverbs = new Array(
-    'appropriately', 'assertively', 'authoritatively', 'collaboratively', 'compellingly', 'competently', 'completely',
-    'continually', 'conveniently', 'credibly', 'distinctively', 'dramatically', 'dynamically', 'efficiently',
-    'energistically', 'enthusiastically', 'globally', 'holisticly', 'interactively', 'intrinsically', 'monotonectally',
-    'objectively', 'phosfluorescently', 'proactively', 'professionally', 'progressively', 'quickly', 'rapidiously',
-    'seamlessly', 'synergistically', 'uniquely', 'fungibly'
-);
-```
+2. Go to https://developer.amazon.com/alexa/console/ask and click the `Create Skill` button
 
-4. Add another variable below that for our verbs:
+![create skill](img/create_alexa_skill.png)
 
-```javascript
-const verbs = new Array(
-    'actualize', 'administrate', 'aggregate', 'architect', 'benchmark', 'brand', 'build', 'communicate', 'conceptualize',
-    'coordinate', 'create', 'cultivate', 'customize', 'deliver', 'deploy', 'develop', 'disintermediate', 'disseminate',
-    'drive', 'embrace', 'e-enable', 'empower', 'enable', 'engage', 'engineer', 'enhance', 'envisioneer', 'evisculate',
-    'evolve', 'expedite', 'exploit', 'extend', 'fabricate', 'facilitate', 'fashion', 'formulate', 'foster', 'generate',
-    'grow', 'harness', 'impact', 'implement', 'incentivize', 'incubate', 'initiate', 'innovate', 'integrate', 'iterate',
-    'leverage existing', 'leverage other\'s', 'maintain', 'matrix', 'maximize', 'mesh', 'monetize', 'morph', 'myocardinate',
-    'negotiate', 'network', 'optimize', 'orchestrate', 'parallel task', 'plagiarize', 'pontificate', 'predominate',
-    'procrastinate', 'productivate', 'productize', 'promote', 'provide access to', 'pursue', 'recaptiualize',
-    'reconceptualize', 'redefine', 're-engineer', 'reintermediate', 'reinvent', 'repurpose', 'restore', 'revolutionize',
-    'scale', 'seize', 'simplify', 'strategize', 'streamline', 'supply', 'syndicate', 'synergize', 'synthesize', 'target',
-    'transform', 'transition', 'underwhelm', 'unleash', 'utilize', 'visualize', 'whiteboard', 'cloudify', 'right-shore'
-);
-```
+3. Put in the name `Business Strategy Generator` and choose **custom** as the model then hit the `create skill` button.
 
-5. After that add our list of adjectives:
+![custom skill](img/select_custom_skill.png)
 
-```javascript
-const adjectives = new Array(
-    '24/7', '24/365', 'accurate', 'adaptive', 'alternative', 'an expanded array of', 'B2B', 'B2C', 'backend',
-    'backward-compatible', 'best-of-breed', 'bleeding-edge', 'bricks-and-clicks', 'business', 'clicks-and-mortar',
-    'client-based', 'client-centered', 'client-centric', 'client-focused', 'collaborative', 'compelling', 'competitive',
-    'cooperative', 'corporate', 'cost effective', 'covalent', 'cross functional', 'cross-media', 'cross-platform',
-    'cross-unit', 'customer directed', 'customized', 'cutting-edge', 'distinctive', 'distributed', 'diverse', 'dynamic',
-    'e-business', 'economically sound', 'effective', 'efficient', 'emerging', 'empowered', 'enabled', 'end-to-end',
-    'enterprise', 'enterprise-wide', 'equity invested', 'error-free', 'ethical', 'excellent', 'exceptional', 'extensible',
-    'extensive', 'flexible', 'focused', 'frictionless', 'front-end', 'fully researched', 'fully tested', 'functional',
-    'functionalized', 'future-proof', 'global', 'go forward', 'goal-oriented', 'granular', 'high standards in',
-    'high-payoff', 'high-quality', 'highly efficient', 'holistic', 'impactful', 'inexpensive', 'innovative',
-    'installed base', 'integrated', 'interactive', 'interdependent', 'intermandated', 'interoperable', 'intuitive',
-    'just in time', 'leading-edge', 'leveraged', 'long-term high-impact', 'low-risk high-yield', 'magnetic',
-    'maintainable', 'market positioning', 'market-driven', 'mission-critical', 'multidisciplinary', 'multifunctional',
-    'multimedia based', 'next-generation', 'one-to-one', 'open-source', 'optimal', 'orthogonal', 'out-of-the-box',
-    'pandemic', 'parallel', 'performance based', 'plug-and-play', 'premier', 'premium', 'principle-centered', 'proactive',
-    'process-centric', 'professional', 'progressive', 'prospective', 'quality', 'real-time', 'reliable', 'resource-sucking',
-    'resource-maximizing', 'resource-leveling', 'revolutionary', 'robust', 'scalable', 'seamless', 'stand-alone',
-    'standardized', 'standards compliant', 'state of the art', 'sticky', 'strategic', 'superior', 'sustainable',
-    'synergistic', 'tactical', 'team building', 'team driven', 'technically sound', 'timely', 'top-line', 'transparent',
-    'turnkey', 'ubiquitous', 'unique', 'user-centric', 'user friendly', 'value-added', 'vertical', 'viral', 'virtual',
-    'visionary', 'web-enabled', 'wireless', 'world-class', 'worldwide', 'fungible', 'cloud-ready', 'elastic', 'hyper-scale',
-    'on-demand', 'cloud-based', 'cloud-centric', 'cloudified', 'agile'
-);
-```
+4. Select **start from scratch** and click the `choose` button.
 
-6. Finally add our array of nouns:
+![start from scratch](img/select_startfromscratch_template.png)
 
-```javascript
-const nouns = new Array(
-    'action items', 'alignments', 'applications', 'architectures', 'bandwidth', 'benefits',
-    'best practices', 'catalysts for change', 'channels', 'collaboration and idea-sharing', 'communities', 'content',
-    'convergence', 'core competencies', 'customer service', 'data', 'deliverables', 'e-business', 'e-commerce', 'e-markets',
-    'e-tailers', 'e-services', 'experiences', 'expertise', 'functionalities', 'growth strategies', 'human capital',
-    'ideas', 'imperatives', 'infomediaries', 'information', 'infrastructures', 'initiatives', 'innovation',
-    'intellectual capital', 'interfaces', 'internal or "organic" sources', 'leadership', 'leadership skills',
-    'manufactured products', 'markets', 'materials', 'meta-services', 'methodologies', 'methods of empowerment', 'metrics',
-    'mindshare', 'models', 'networks', 'niches', 'niche markets', 'opportunities', '"outside the box" thinking', 'outsourcing',
-    'paradigms', 'partnerships', 'platforms', 'portals', 'potentialities', 'process improvements', 'processes', 'products',
-    'quality vectors', 'relationships', 'resources', 'results', 'ROI', 'scenarios', 'schemas', 'services', 'solutions',
-    'sources', 'strategic theme areas', 'supply chains', 'synergy', 'systems', 'technologies', 'technology',
-    'testing procedures', 'total linkage', 'users', 'value', 'vortals', 'web-readiness', 'web services', 'fungibility',
-    'clouds', 'nosql', 'storage', 'virtualization', 'scrums', 'sprints', 'wins'
-);
-```
+#### Configuring the skill
 
-We now have all the data we need to create our strategies in our javascript file.
+The skill **invocation name** is what a user will say to an Alexa device to trigger our skill. To make this as realistic as possible, lets change ours to "senior management", so that our skill will be invoked by the phrase "Alexa, ask senior management..."
 
-#### Picking from the array at random
+1. Click on `Invocation` on the left navigation and change the Skill Invocation Name to `senior management` and click `Save Model` (in the top left corner).
 
-To build our sentence we need to pick one element from each of these arrays randomly and add them together.
+![invocation name](img/invocation_name_v1.png)
 
-1. Add the following function to your JavaScript file:
+When you start to build more complex Alexa skills, you need to define the *intents* that your user can utter. An *intent* is essentially a general action a user can perform e.g. "what is the forecast?" or "get my balance!". Since our skill doesn't handle multiple actions we'll just create one intent that will handle all requests.
 
-```javascript
-function returnRandomElement(arr) {
-    var rand = arr[Math.floor(Math.random() * arr.length)];
-    return rand;
-}
-```
+2. On the left side-bar click on `Intents` and click `+ Add`:
 
-We can pass an array of any size in to this function and it will return a random element from the array. Perfect!
+![intents](img/intents.png)
 
-#### Fixing the capitals
+3. Use the name `EveryThingIntent` and hit the `Create custom intent` button.
 
-Some of the arrays have capitalised words and some do not. Let's fix that with a quick function.
+4. Enter the text `{EveryThingSlot}` in to the text field under "Sample Utterances (0)" and click the plus sign to create the slot:
 
-1. Add this function to your file:
+![sample utterance](img/sample_utterance.png)
 
-```javascript
-function toTitleCase(str) {
-    return str.replace(/\w\S*/g, function(txt) {
-        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-    });
-}
-```
+5. Scroll down to where it says `Intent Slots` and use the `Select a slot type` dropdown to select the value **BAG_OF_WORDS** for the EveryThingSlot:
 
-This function will capitalise the first letter of every word which should help keep our results consistent as well as add more drama to our corporate waffle!
+![create intent](img/create_everything_intent.png)
 
-#### Putting it all together
+6. Click on `Save Model` and then `Build Model` in the top left corner of the console:
 
-Finally we need to assemble our sentence. As we learned earlier, OpenWhisk looks for a `main()` function inside our file unless we explicitly specify a different entry point. We also need to return a JSON object to the platform.
+![save and build model](img/save_and_build.png)
 
-1. Add the following `main()` function to your file and save it:
-
-```javascript
-function main() {
-
-    var statement = returnRandomElement(prefixes) +
-        " " + returnRandomElement(adverbs) +
-        " " + returnRandomElement(verbs) +
-        " " + returnRandomElement(adjectives) +
-        " " + returnRandomElement(nouns);
-
-    var response = {
-        "text": statement
-    }
-
-    return response;
-}
-```
-
-**Our action is ready. Lets upload it and invoke it to see it in action.**
-
-2. Upload your file to IBMCloud Functions:
-
-```
-$ ibmcloud wsk action create generateStrategy generator.js
-ok: created action generateStrategy
-```
-
-3. Test your action by invoking it from the CLI:
-
-```
-$ ibmcloud wsk action invoke -r generateStrategy
-{
-    "text": "We need to holisticly conceptualize client-focused value"
-}
-```
-
-Try invoking it a few times to see the different results you get.
+#### Y
 
 🎉🎉🎉 **Good job, your functionality is all ready to go. Now lets move on to integrating this with some voice assistants.** 🎉🎉🎉
 
