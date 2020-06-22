@@ -7,7 +7,7 @@
 
 ### Registering for a free IBM Cloud Account
 
-1. If you don't have one already, sign up for a free IBM Cloud Account [here](https://ibm.biz/Bd2w6g).
+1. If you don't have one already, sign up for a free IBM Cloud Account [here](http://ibm.biz/serverlessvoice).
 
 2. Verify your account via the email the platform sends you.
 
